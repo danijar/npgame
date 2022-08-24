@@ -1,0 +1,1 @@
+from .npgame import Game
