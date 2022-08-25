@@ -25,6 +25,7 @@ vel = [0, 0]
 won = False
 
 game = npgame.Game(level.shape, scale=40)
+game.title('Jumper')
 while game.running:
   game.update()
 

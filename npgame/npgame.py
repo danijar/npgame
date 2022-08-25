@@ -30,7 +30,9 @@ class Game:
     code = pygame.key.key_code(key)
     return self._pressed[code] or code in self._keydowns
 
-  def draw(self, x, y, w, h, color_or_image):
+  def draw(self, x, y, w, h, color=None, array=None, image=None):
+    if sum(x is not None for x in (color, array, image)) != 1:
+      raise ValueError('Provide exactly one of color, array, or image.')
     x, y = int(x * self._scale), int(y * self._scale)
     w, h = int(w * self._scale), int(h * self._scale)
     x1, x2, y1, y2 = x, x + w, y, y + h
@@ -38,12 +40,25 @@ class Game:
     y1, y2 = max(0, y1), min(y2, self._canvas.shape[1])
     if x2 - x1 < 1 or y2 - y1 < 1:
       return
-    if isinstance(color_or_image, str):
-      image = self._image(color_or_image, (w, h))
+    if color is not None:
+      self._canvas[x1: x2, y1: y2] = color
+    if array is not None:
+      if array.shape[:2] != (w, h):
+        array = (255 * array).astype(np.uint8)
+        array = np.array(Image.fromarray(array).resize((w, h))) / 255
+      self._canvas[x1: x2, y1: y2] = array[x1 - x: x2 - x, y1 - y: y2 - y]
+    if image is not None:
+      image = self._image(image, (w, h))
       image = image[x1 - x: x2 - x, y1 - y: y2 - y]
-      self._canvas[x1: x2, y1: y2] = image
-    else:
-      self._canvas[x1: x2, y1: y2] = color_or_image
+      assert image.shape[-1] in (1, 3, 4), image.shape
+      if image.shape[-1] == 1:
+        self._canvas[x1: x2, y1: y2] = image
+      if image.shape[-1] == 3:
+        self._canvas[x1: x2, y1: y2] = image
+      if image.shape[-1] == 4:
+        bg = self._canvas[x1: x2, y1: y2]
+        image, alpha = image[..., :3], image[..., -1:]
+        self._canvas[x1: x2, y1: y2] = alpha * image + (1 - alpha) * bg
 
   def update(self):
     self._display()
@@ -67,6 +82,8 @@ class Game:
       image = imageio.imread(path)
       if size:
         image = np.array(Image.fromarray(image).resize(size))
+      if len(image.shape) == 2:
+        image = image[..., None]
       image = np.transpose(image, (1, 0, 2))[:, ::-1, :] / 255
       self._images[key] = image
     return self._images[key]

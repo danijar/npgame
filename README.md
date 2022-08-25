@@ -3,15 +3,13 @@
 🕹️ npgame
 =========
 
-`npgame` makes it easy and fast to write simple games. It is great for learning
-and when you quickly want to get something done. `npgame` is powered by Numpy
-and PyGame. For large game projects, we recommend to use PyGame directly.
+`npgame` makes it easy and fast to write simple games, powered by Numpy and
+PyGame. It's a lightweight API to quickly get something done and for learning
+rather than a solution full-blown feature-rich games.
 
-`npgame` opens a window for you, supports simple graphics like colored
-rectangles and images, and lets you detect keyboard input. With a focus on
-simplicity, `npgame` intentionally does not include functionality for mouse
-input, audio, or networking. PyGame can be used together with `npgame` or by
-itself if those features are needed.
+Features include opening a window, showing graphics like colored rectangles and
+images, and detecting keyboard input. For additional features like mouse input
+and audio, check out PyGame, which can be combined freely.
 
 Installation
 ------------
@@ -102,12 +100,13 @@ add a pause.
   The function detects both keys that are currently held down and keys that were
   briefly pressed between the last two `update()` calls.
 
-- ### `draw(x, y, w, h, color_or_image)`
+- ### `draw(x, y, w, h, color=None, array=None, image=None)`
 
-  Draws either a rectangle of a color specified as RGB tuple or an image provided
-  by string path. The position of the area is specified with `x` and `y` and its
-  size with `w` and `h`. Images are resized as needed and cached for efficiency.
-  For the area to appear, `update()` must be called inside the main loop.
+  Draws a rectangle of a color given as RGB tuple, an Numpy array, or an image
+  given as string path. The position of the area is specified with `x` and `y`
+  and its size with `w` and `h`. Images are resized as needed and cached for
+  efficiency. For the area to appear, `update()` must be called inside the main
+  loop.
 
 - ### `close()`
 
