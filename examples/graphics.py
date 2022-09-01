@@ -74,7 +74,8 @@ while game.running:
   # Alpha blending and moving
   timer += game.delta
   image = pathlib.Path(__file__).parent / 'joystick_rgba.png'
+  color = tuple(c[0]) + (0.6,)
   game.draw(0.8, 0.8, 1.3, 1.3, array=n[0])
   game.draw(1 + 0.2 * np.sin(5 * timer), 1, 1.5, 1.5, image=image)
-  game.draw(1.3, .7 + 0.1 * np.sin(3 * timer), 1, 1, color=c[0])
+  game.draw(1.3, .7 + 0.1 * np.sin(3 * timer), 1, 1, color=color)
   game.draw(1.5, .5, 1, 1, image=image)

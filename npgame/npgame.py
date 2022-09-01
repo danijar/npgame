@@ -41,24 +41,28 @@ class Game:
     if x2 - x1 < 1 or y2 - y1 < 1:
       return
     if color is not None:
-      self._canvas[x1: x2, y1: y2] = color
+      color = np.asarray(color, np.float32)
+      assert color.shape in ((1,), (3,), (4,)), color.shape
+      content = color[None, None, :]
     if array is not None:
+      array = np.asarray(array, np.float32)
+      assert len(array.shape) == 3
+      assert array.shape[-1] in (1, 3, 4), image.shape
       if array.shape[:2] != (w, h):
         array = (255 * array).astype(np.uint8)
-        array = np.array(Image.fromarray(array).resize((w, h))) / 255
-      self._canvas[x1: x2, y1: y2] = array[x1 - x: x2 - x, y1 - y: y2 - y]
+        array = np.asarray(Image.fromarray(array).resize((w, h))) / 255
+      content = array[x1 - x: x2 - x, y1 - y: y2 - y]
     if image is not None:
       image = self._image(image, (w, h))
-      image = image[x1 - x: x2 - x, y1 - y: y2 - y]
+      assert len(image.shape) == 3
       assert image.shape[-1] in (1, 3, 4), image.shape
-      if image.shape[-1] == 1:
-        self._canvas[x1: x2, y1: y2] = image
-      if image.shape[-1] == 3:
-        self._canvas[x1: x2, y1: y2] = image
-      if image.shape[-1] == 4:
-        bg = self._canvas[x1: x2, y1: y2]
-        image, alpha = image[..., :3], image[..., -1:]
-        self._canvas[x1: x2, y1: y2] = alpha * image + (1 - alpha) * bg
+      content = image[x1 - x: x2 - x, y1 - y: y2 - y]
+    if content.shape[-1] in (1, 3):
+      self._canvas[x1: x2, y1: y2] = content
+    if content.shape[-1] == 4:
+      bg = self._canvas[x1: x2, y1: y2]
+      content, alpha = content[..., :3], content[..., -1:]
+      self._canvas[x1: x2, y1: y2] = alpha * content + (1 - alpha) * bg
 
   def update(self):
     self._display()
