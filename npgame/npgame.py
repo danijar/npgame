@@ -4,7 +4,7 @@ import pathlib
 import imageio
 import numpy as np
 import pygame
-from PIL import Image
+from PIL import Image, ImageFont, ImageDraw
 
 
 class Game:
@@ -18,6 +18,8 @@ class Game:
     self._canvas = np.zeros((grid[0] * scale, grid[1] * scale, 3), np.float32)
     self._screen = pygame.display.set_mode(self._canvas.shape[:2])
     self._images = {}
+    self._texts = {}
+    self._fonts = {}
     self._pressed = None
     self._keydowns = None
     self._fps = fps
@@ -63,6 +65,30 @@ class Game:
       bg = self._canvas[x1: x2, y1: y2]
       content, alpha = content[..., :3], content[..., -1:]
       self._canvas[x1: x2, y1: y2] = alpha * content + (1 - alpha) * bg
+
+  def text(self, x, y, message, font, color=(0.5, 0.5, 0.5, 1.0), size=1):
+    font = str(font)
+    color = tuple(int(255 * x) for x in color)
+    color = color + (255,) if len(color) == 3 else color
+    assert len(color) == 4
+    size = int(size * self._scale)
+    key = (message, font, color, size)
+    if key not in self._texts:
+      if (font, size) not in self._fonts:
+        if font == 'default':
+          self._fonts[(font, size)] = ImageFont.load_default()
+        else:
+          assert font.endswith('.ttf'), font
+          self._fonts[(font, size)] = ImageFont.truetype(font, size)
+      font = self._fonts[(font, size)]
+      w, h = font.getsize(message)
+      image = Image.new('RGBA', (w, h), (255, 255, 255, 0))
+      draw = ImageDraw.Draw(image)
+      draw.text((0, 0), message, color, font)
+      self._texts[key] = np.array(image).transpose((1, 0, 2))[:, ::-1, :] / 255
+    array = self._texts[key]
+    w, h = array.shape[:2]
+    self.draw(x, y, w / self._scale, h / self._scale, array=array)
 
   def update(self):
     self._display()

@@ -54,19 +54,16 @@ while game.running:
     game.draw(pos, 6, pos / 10, pos / 10, array=n[i])
 
   # Images of increasing size
-  n = noise(game.delta)
   image = pathlib.Path(__file__).parent / 'joystick_gray.jpg'
   for i, pos in enumerate(range(1, 10)):
     game.draw(pos, 5, pos / 10, pos / 10, image=image)
 
   # Images of increasing size
-  n = noise(game.delta)
   image = pathlib.Path(__file__).parent / 'joystick_rgb.gif'
   for i, pos in enumerate(range(1, 10)):
     game.draw(pos, 4, pos / 10, pos / 10, image=image)
 
   # Images of increasing size
-  n = noise(game.delta)
   image = pathlib.Path(__file__).parent / 'joystick_rgba.png'
   for i, pos in enumerate(range(1, 10)):
     game.draw(pos, 3, pos / 10, pos / 10, image=image)

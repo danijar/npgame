@@ -108,6 +108,13 @@ add a pause.
   efficiency. For the area to appear, `update()` must be called inside the main
   loop.
 
+- ### `text(x, y, message, font, color=(0.5, 0.5, 0.5, 1), size=1)`
+
+  Render text given the filename of a font in TTF format. An example file of
+  the free DejaVu font can be found in the `examples` directory of the npgame
+  repository. The color of the font can include the opacity as the last number.
+  The position and size are relative to the grid of the `Game` object.
+
 - ### `close()`
 
   Shuts down pygame, which closes the window, and sets `running` to `False` so
