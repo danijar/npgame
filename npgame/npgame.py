@@ -13,10 +13,7 @@ class Game:
     pygame.init()
     self.running = True
     self.delta = 0
-    self._grid = grid
-    self._scale = scale
-    self._canvas = np.zeros((grid[0] * scale, grid[1] * scale, 3), np.float32)
-    self._screen = pygame.display.set_mode(self._canvas.shape[:2])
+    self.resize(grid, scale)
     self._images = {}
     self._texts = {}
     self._fonts = {}
@@ -25,6 +22,13 @@ class Game:
     self._fps = fps
     self._clock = pygame.time.Clock()
     self._time = time.time()
+
+  def resize(self, grid=None, scale=None):
+    self._grid = grid or self._grid
+    self._scale = scale or self._scale
+    self._canvas = np.zeros(
+        (int(grid[0] * scale), int(grid[1] * scale), 3), np.float32)
+    self._screen = pygame.display.set_mode(self._canvas.shape[:2])
 
   def pressed(self, key):
     if not self._pressed:

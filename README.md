@@ -87,6 +87,13 @@ add a pause.
   Set the title of the window. This can be called either once in the beginning or
   repeatedly later on, for example to display status information to the user.
 
+- ### `resize(grid=None, scale=None)`
+
+  Change the size of the grid that is displayed on the window. This changes the
+  size of the window. The `grid` argument is a tuple of integers for the width
+  and height of the grid. The `scale` is an integer indicating how many pixels
+  big each grid tile is. If omitted, the values are not changed.
+
 - ### `update()`
 
   This function should be called early inside the main loop. It displays the

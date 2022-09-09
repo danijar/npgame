@@ -3,7 +3,7 @@ import pathlib
 
 setuptools.setup(
     name='npgame',
-    version='0.3.0',
+    version='0.3.1',
     author='Danijar Hafner',
     author_email='mail@danijar.com',
     description='Write simple games in Numpy!',
